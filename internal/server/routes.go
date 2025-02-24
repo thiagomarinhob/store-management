@@ -28,7 +28,13 @@ func (s *Server) RegisterRoutes() http.Handler {
 	storeService := services.NewStoreService(storeRepo)
 	storeHandler := handlers.NewStoreHandler(storeService)
 
+	adminRepo := repositories.NewAdminRepository(s.db.GetDB())
+	adminService := services.NewAdminService(adminRepo)
+	adminHandler := handlers.NewAdminHandler(adminService)
+
+	// Publics routes
 	r.POST("/stores", storeHandler.CreateStore)
+	r.POST("/admin", adminHandler.CreateAdmin)
 
 	auth := r.Group("/")
 	auth.Use(middlewares.Auth())
@@ -39,6 +45,13 @@ func (s *Server) RegisterRoutes() http.Handler {
 			storeGroup.PUT("/:id", storeHandler.UpdateStore)
 			storeGroup.DELETE("/:id", storeHandler.DeleteStore)
 			storeGroup.GET("/", storeHandler.ListStores)
+		}
+
+		adminGroup := auth.Group("/admin")
+		{
+			adminGroup.GET("/:id", adminHandler.GetAdminByID)
+			adminGroup.PUT("/:id", adminHandler.UpdateAdmin)
+			adminGroup.DELETE("/:id", adminHandler.DeleteAdmin)
 		}
 	}
 

@@ -6,11 +6,11 @@ import (
 )
 
 type Admin struct {
-	ID       string `gorm:"type:uuid;primaryKey"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	StoreID  string `gorm:"type:uuid" json:"store_id"`
+	ID       string  `gorm:"type:uuid;primaryKey"`
+	Name     string  `json:"name"`
+	Email    string  `json:"email"`
+	Password string  `json:"password"`
+	StoreID  *string `gorm:"type:uuid" json:"store_id"`
 }
 
 func (admin *Admin) BeforeCreate(tx *gorm.DB) (err error) {
